@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz HTML & CSS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.05em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .progress-container {
+            margin-bottom: 30px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #667eea;
+            transition: width 0.3s ease;
+        }
+
+        .question {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .option {
+            padding: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.05em;
+            background: #f9f9f9;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #e8edff;
+        }
+
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .explanation {
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 1.05em;
+        }
+
+        .explanation.correct {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            color: #065f46;
+        }
+
+        .explanation.incorrect {
+            background: #fee2e2;
+            border: 2px solid #ef4444;
+            color: #991b1b;
+        }
+
+        .explanation-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .result-container {
+            text-align: center;
+        }
+
+        .result-score {
+            font-size: 4em;
+            font-weight: 700;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .result-percentage {
+            font-size: 1.5em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .result-message {
+            font-size: 1.8em;
+            margin: 20px 0 30px 0;
+        }
+
+        .result-list {
+            margin: 30px 0;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .icon-check {
+            color: #10b981;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .icon-x {
+            color: #ef4444;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .admin-panel {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .student-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .student-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .student-name {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .student-score {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .student-info {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .user-info {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 2px solid #667eea;
+        }
+
+        .user-info strong {
+            color: #667eea;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .errors-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 10px;
+            padding-right: 10px;
+        }
+
+        .errors-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .errors-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .errors-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .errors-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .error-item {
+            padding: 12px;
+            border-left: 3px solid #ef4444;
+            margin-bottom: 10px;
+            background: #fee2e2;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        .error-item strong {
+            color: #991b1b;
+        }
+
+        .student-actions {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+        }
+
+        .stat-card h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .stat-correct {
+            color: #10b981 !important;
+        }
+
+        .stat-incorrect {
+            color: #ef4444 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Quiz HTML & CSS</h1>
+        </div>
+
+        <!-- Tela de Login -->
+        <div id="login-container">
+            <h2 style="color: #667eea; margin-bottom: 20px; text-align: center;">Identificação do Aluno</h2>
+            <div class="form-group">
+                <label for="student-name">Nome Completo:</label>
+                <input type="text" id="student-name" placeholder="Digite seu nome completo">
+            </div>
+            <div class="form-group">
+                <label for="student-class">Turma:</label>
+                <input type="text" id="student-class" placeholder="Ex: 3° Ano A">
+            </div>
+            <button class="btn btn-primary" id="start-btn">Iniciar Quiz</button>
+            <button class="btn btn-secondary" id="admin-access-btn">Acesso Administrativo</button>
+        </div>
+
+        <!-- Tela de Login Admin -->
+        <div id="admin-login-container" class="hidden">
+            <h2 style="color: #667eea; margin-bottom: 20px; text-align: center;">Acesso Administrativo</h2>
+            <div class="form-group">
+                <label for="admin-username">Usuário:</label>
+                <input type="text" id="admin-username" placeholder="Digite o usuário">
+            </div>
+            <div class="form-group">
+                <label for="admin-password">Senha:</label>
+                <input type="password" id="admin-password" placeholder="Digite a senha">
+            </div>
+            <button class="btn btn-primary" id="admin-login-btn">Entrar</button>
+            <button class="btn btn-secondary" id="back-to-login-btn">Voltar</button>
+        </div>
+
+        <!-- Painel Administrativo -->
+        <div id="admin-container" class="hidden">
+            <div class="admin-header">
+                <h2 style="color: #667eea;">Painel Administrativo</h2>
+                <button class="btn btn-secondary" style="width: auto; padding: 10px 20px;" id="logout-btn">Sair</button>
+            </div>
+            <div id="admin-stats" style="background: #f0f4ff; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                <h3 style="color: #667eea; margin-bottom: 15px;">Estatísticas Gerais</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Total de Alunos</h4>
+                        <div class="stat-value" id="total-students">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Média Geral</h4>
+                        <div class="stat-value" id="average-score">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Média de Acertos</h4>
+                        <div class="stat-value stat-correct" id="average-correct">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Média de Erros</h4>
+                        <div class="stat-value stat-incorrect" id="average-errors">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-panel" id="students-list">
+                <div class="loading">Carregando dados...</div>
+            </div>
+        </div>
+
+        <!-- Quiz -->
+        <div id="quiz-container" class="hidden">
+            <div class="user-info">
+                <strong>Aluno:</strong> <span id="current-student-name"></span> | 
+                <strong>Turma:</strong> <span id="current-student-class"></span>
+            </div>
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="question-number">Questão 1 de 46</span>
+                    <span id="score">Pontuação: 0</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+            <div id="explanation-container"></div>
+            <button class="btn btn-primary hidden" id="next-btn">Próxima Questão</button>
+        </div>
+
+        <!-- Resultado -->
+        <div id="result-container" class="result-container hidden">
+            <h2 style="color: #667eea; font-size: 2em; margin-bottom: 20px;">Quiz Finalizado!</h2>
+            <div class="result-score" id="final-score"></div>
+            <div class="result-percentage" id="final-percentage"></div>
+            <div class="result-message" id="result-message"></div>
+            <div class="result-list" id="result-list"></div>
+            <button class="btn btn-primary" id="restart-btn">🔄 Fazer Novo Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_USERNAME = 'RPVADMIN';
+        const ADMIN_PASSWORD = 'rpvti@25';
+        
+        const questions = [
+            {
+                question: "No VS Code, qual atalho cria automaticamente a estrutura HTML básica completa (doctype, head, body)?",
+                options: ["html + Enter", "control + espaço", "control + C", "Alt + Shift + F"],
+                correct: 1,
+                explanation: "O atalho 'Control' seguido de espaço cria toda a estrutura HTML5 básica automaticamente no VS Code."
+            },
+            {
+                question: "Qual atributo é usado para definir o texto alternativo de uma imagem em HTML?",
+                options: ["src", "alt", "title", "href"],
+                correct: 1,
+                explanation: "O atributo 'alt' define um texto alternativo que descreve a imagem caso ela não carregue."
+            },
+            {
+                question: "Qual atributo da tag <a> abre o link em uma nova aba?",
+                options: ["target='_new'", "open='_blank'", "target='_blank'", "window='new'"],
+                correct: 2,
+                explanation: "O atributo target='_blank' faz com que o link seja aberto em uma nova aba do navegador."
+            },
+            {
+                question: "Para que serve a tag <br> em HTML?",
+                options: ["Cria uma linha horizontal", "Cria uma quebra de linha", "Cria um parágrafo", "Apaga um texto"],
+                correct: 1,
+                explanation: "A tag <br> insere uma quebra de linha no texto, sem iniciar um novo parágrafo."
+            },
+            {
+                question: "Qual tag HTML define o cabeçalho de uma página ou seção?",
+                options: ["<header>", "<head>", "<h1>", "<title>"],
+                correct: 0,
+                explanation: "<header> define o cabeçalho de uma página ou seção, podendo conter títulos e navegação."
+            },
+            {
+                question: "O que é a tag <p> em HTML?",
+                options: ["Um título principal da página", "Um parágrafo de texto", "Uma imagem", "Um link"],
+                correct: 1,
+                explanation: "A tag <p> representa um parágrafo (paragraph) de texto em HTML."
+            },
+            {
+                question: "Qual a diferença principal entre <div> e <span>?",
+                options: [
+                    "Não há diferença, são iguais",
+                    "<div> é para textos e <span> para imagens",
+                    "<div> é elemento de bloco e <span> é elemento inline",
+                    "<div> só funciona com CSS e <span> com JavaScript"
+                ],
+                correct: 2,
+                explanation: "<div> é um elemento de bloco (ocupa toda largura disponível) e <span> é inline (ocupa apenas o espaço necessário)."
+            },
+            {
+                question: "Qual tag HTML define o rodapé de uma página ou seção?",
+                options: ["<footer>", "<bottom>", "<section>", "<div>"],
+                correct: 0,
+                explanation: "<footer> define o rodapé de uma página ou seção, geralmente com informações de copyright ou links."
+            },
+            {
+                question: "Como aplicar um estilo apenas quando o mouse passa sobre um elemento?",
+                options: [":hover", ":active", ":focus", ":visited"],
+                correct: 0,
+                explanation: "A pseudo-classe :hover aplica estilos quando o mouse passa sobre um elemento."
+            },
+            {
+                question: "Como criar um link para um site externo?",
+                options: [
+                    '<a href="https://exemplo.com">Link</a>',
+                    '<a src="https://exemplo.com">Link</a>',
+                    '<link href="https://exemplo.com">Link</link>',
+                    '<a url="https://exemplo.com">Link</a>'
+                ],
+                correct: 0,
+                explanation: "Usa-se <a href='URL'> para criar links para sites externos."
+            },
+            {
+                question: "Qual propriedade CSS muda a cor de fundo de um elemento?",
+                options: ["color", "background-color", "bg-color", "background"],
+                correct: 1,
+                explanation: "'background-color' define a cor de fundo do elemento."
+            },
+            {
+                question: "Qual propriedade CSS altera a opacidade de um elemento?",
+                options: ["opacity", "transparency", "filter", "visibility"],
+                correct: 0,
+                explanation: "'opacity' define a transparência do elemento, variando de 0 (totalmente transparente) a 1 (opaco)."
+            },
+            {
+                question: "Qual propriedade CSS controla o espaçamento entre linhas de texto?",
+                options: ["line-height", "text-spacing", "letter-spacing", "line-spacing"],
+                correct: 0,
+                explanation: "'line-height' define o espaçamento vertical entre linhas de texto."
+            },
+            {
+                question: "Qual propriedade CSS controla o espaçamento entre letras?",
+                options: ["letter-spacing", "text-spacing", "spacing", "font-spacing"],
+                correct: 0,
+                explanation: "'letter-spacing' define o espaçamento horizontal entre caracteres."
+            },
+            {
+                question: "Como criar uma borda arredondada em CSS?",
+                options: ["border-radius: 10px;", "border-round: 10px;", "round-border: 10px;", "radius-border: 10px;"],
+                correct: 0,
+                explanation: "'border-radius' cria cantos arredondados em elementos."
+            },
+            {
+                question: "Qual propriedade CSS muda a fonte do texto?",
+                options: ["font-family", "font-style", "font-weight", "text-font"],
+                correct: 0,
+                explanation: "'font-family' define a família de fontes do texto."
+            },
+            {
+                question: "Como deixar o texto em itálico no CSS?",
+                options: ["font-style: italic;", "text-style: italic;", "font-weight: italic;", "text-transform: italic;"],
+                correct: 0,
+                explanation: "'font-style: italic;' deixa o texto em itálico."
+            },
+            {
+                question: "Qual propriedade CSS define a altura mínima de um elemento?",
+                options: ["min-height", "height", "max-height", "line-height"],
+                correct: 0,
+                explanation: "'min-height' define a altura mínima que o elemento pode ter."
+            },
+            {
+                question: "Qual propriedade CSS define a altura máxima de um elemento?",
+                options: ["max-height", "height", "min-height", "line-height"],
+                correct: 0,
+                explanation: "'max-height' define a altura máxima que o elemento pode ter."
+            },
+            {
+                question: "Como fazer um elemento flutuar à direita usando CSS?",
+                options: ["float: right;", "align: right;", "position: right;", "text-align: right;"],
+                correct: 0,
+                explanation: "'float: right;' faz o elemento flutuar à direita do container."
+            },
+            {
+                question: "Qual propriedade CSS posiciona um elemento em relação ao seu container pai?",
+                options: ["position", "float", "display", "align"],
+                correct: 0,
+                explanation: "'position' define como o elemento será posicionado: static, relative, absolute ou fixed."
+            },
+            {
+                question: "Qual valor da propriedade 'position' mantém o elemento fixo na tela mesmo ao rolar a página?",
+                options: ["absolute", "relative", "fixed", "static"],
+                correct: 2,
+                explanation: "'fixed' mantém o elemento visível no mesmo lugar enquanto o usuário rola a página."
+            },
+            {
+                question: "Qual propriedade CSS define a cor do texto quando o mouse passa sobre um link?",
+                options: ["a:hover { color: red; }", "a { color: red; }", "a:active { color: red; }", "a:focus { color: red; }"],
+                correct: 0,
+                explanation: "a:hover aplica estilos apenas quando o mouse está sobre o link."
+            },
+            {
+                question: "Qual propriedade CSS permite sobreposição de elementos (camadas)?",
+                options: ["z-index", "stack", "layer", "position"],
+                correct: 0,
+                explanation: "'z-index' controla a ordem das camadas de elementos posicionados."
+            },
+            {
+                question: "Qual propriedade CSS cria sombra no texto?",
+                options: ["text-shadow", "box-shadow", "shadow-text", "font-shadow"],
+                correct: 0,
+                explanation: "'text-shadow' adiciona sombra ao texto."
+            },
+            {
+                question: "Qual propriedade CSS cria sombra em um elemento (como caixas ou botões)?",
+                options: ["box-shadow", "text-shadow", "shadow-box", "element-shadow"],
+                correct: 0,
+                explanation: "'box-shadow' cria sombras em elementos, como divs e botões."
+            },
+            {
+                question: "Como centralizar horizontalmente um elemento de bloco com largura fixa?",
+                options: ["margin: 0 auto;", "text-align: center;", "align: center;", "center: true;"],
+                correct: 0,
+                explanation: "'margin: 0 auto;' centraliza elementos de bloco com largura definida."
+            },
+            {
+                question: "Qual propriedade CSS define um layout em grade com linhas e colunas?",
+                options: ["display: grid;", "display: flex;", "display: block;", "display: table;"],
+                correct: 0,
+                explanation: "'display: grid' cria um layout baseado em linhas e colunas, controlando melhor o posicionamento dos elementos."
+            },
+            {
+                question: "Como definir uma classe em HTML?",
+                options: [
+                    '<div id="minha-classe">',
+                    '<div class="minha-classe">',
+                    '<div .minha-classe>',
+                    '<div className="minha-classe">'
+                ],
+                correct: 1,
+                explanation: 'Classes são definidas com o atributo class="nome-da-classe".'
+            },
+            {
+                question: "Qual a diferença entre ID e Classe?",
+                options: [
+                    "ID pode ser usado várias vezes, classe apenas uma vez",
+                    "ID deve ser único na página, classe pode ser reutilizada",
+                    "Não há diferença",
+                    "ID é para CSS e classe para JavaScript"
+                ],
+                correct: 1,
+                explanation: "Um ID deve ser único na página (usado apenas uma vez), enquanto classes podem ser reutilizadas em vários elementos."
+            },
+            {
+                question: "No CSS, como selecionar um elemento por ID?",
+                options: [".meu-id { }", "#meu-id { }", 'id="meu-id" { }', "*meu-id { }"],
+                correct: 1,
+                explanation: "IDs são selecionados no CSS usando o símbolo # seguido do nome do ID."
+            },
+            {
+                question: "No CSS, como selecionar uma classe?",
+                options: ["#minha-classe { }", 'classe="minha-classe" { }', ".minha-classe { }", "*minha-classe { }"],
+                correct: 2,
+                explanation: "Classes são selecionadas no CSS usando o ponto (.) seguido do nome da classe."
+            },
+            {
+                question: "Qual tag HTML representa um título de nível 1 (o mais importante)?",
+                options: ["<title>", "<header>", "<h1>", "<heading>"],
+                correct: 2,
+                explanation: "A tag <h1> representa o título de maior importância (heading 1). Existem de <h1> até <h6>."
+            },
+            {
+                question: "Onde o CSS deve ser incluído para estilizar uma página HTML?",
+                options: [
+                    "Apenas inline nos elementos",
+                    "Na tag <head> ou em arquivo externo .css",
+                    "Apenas no final do <body>",
+                    "No arquivo JavaScript"
+                ],
+                correct: 1,
+                explanation: "CSS pode ser incluído na tag <head> usando <style> ou <link>, ou em arquivo externo .css vinculado com <link>."
+            },
+            {
+                question: "O que faz a propriedade CSS 'display: flex'?",
+                options: [
+                    "Deixa o elemento invisível",
+                    "Torna o elemento flexível para layouts responsivos",
+                    "Adiciona uma animação",
+                    "Muda a cor do elemento"
+                ],
+                correct: 1,
+                explanation: "display: flex ativa o Flexbox, um sistema de layout que facilita o alinhamento e distribuição de elementos."
+            },
+            {
+                question: "Qual tag é usada para inserir uma imagem em HTML?",
+                options: ["<image>", "<img>", "<picture>", "<photo>"],
+                correct: 1,
+                explanation: "A tag <img> é usada para inserir imagens. Exemplo: <img src='foto.jpg' alt='descrição'>"
+            },
+            {
+                question: "O que significa a propriedade CSS 'margin'?",
+                options: [
+                    "Espaço interno do elemento",
+                    "Espaço externo ao redor do elemento",
+                    "Largura do elemento",
+                    "Cor de fundo do elemento"
+                ],
+                correct: 1,
+                explanation: "Margin define o espaço EXTERNO ao redor do elemento, criando distância entre ele e outros elementos."
+            },
+            {
+                question: "Qual a diferença entre 'padding' e 'margin'?",
+                options: [
+                    "São exatamente iguais",
+                    "Padding é espaço interno, margin é espaço externo",
+                    "Padding é para textos, margin para imagens",
+                    "Padding funciona apenas com Flexbox"
+                ],
+                correct: 1,
+                explanation: "Padding é o espaço INTERNO (entre o conteúdo e a borda), margin é o espaço EXTERNO (fora da borda)."
+            },
+            {
+                question: "Como criar um link em HTML?",
+                options: [
+                    '<link href="pagina.html">',
+                    '<a href="pagina.html">',
+                    '<url src="pagina.html">',
+                    '<hyperlink to="pagina.html">'
+                ],
+                correct: 1,
+                explanation: "Links são criados com a tag <a> e o atributo href. Exemplo: <a href='pagina.html'>Clique aqui</a>"
+            },
+            {
+                question: "O que faz a propriedade CSS 'color'?",
+                options: [
+                    "Muda a cor de fundo",
+                    "Muda a cor do texto",
+                    "Muda a cor da borda",
+                    "Adiciona um gradiente"
+                ],
+                correct: 1,
+                explanation: "A propriedade 'color' altera a cor do TEXTO do elemento."
+            },
+            {
+                question: "Qual propriedade CSS muda a cor de fundo?",
+                options: ["color", "bg-color", "background-color", "back-color"],
+                correct: 2,
+                explanation: "A propriedade 'background-color' define a cor de fundo de um elemento."
+            },
+            {
+                question: "Como criar uma lista não ordenada em HTML?",
+                options: ["<list>", "<ol>", "<ul>", "<nl>"],
+                correct: 2,
+                explanation: "A tag <ul> (unordered list) cria listas não ordenadas com marcadores. Use <li> para cada item."
+            },
+            {
+                question: "O que faz a propriedade CSS 'text-align: center'?",
+                options: [
+                    "Centraliza o elemento na página",
+                    "Centraliza o texto dentro do elemento",
+                    "Deixa o texto em negrito",
+                    "Aumenta o tamanho do texto"
+                ],
+                correct: 1,
+                explanation: "text-align: center alinha o TEXTO horizontalmente ao centro dentro do elemento."
+            },
+            {
+                question: "Qual tag cria um botão em HTML?",
+                options: ["<btn>", "<input type='button'>", "<button>", "Tanto b quanto c estão corretas"],
+                correct: 3,
+                explanation: "Tanto <button> quanto <input type='button'> podem criar botões, mas <button> é mais versátil."
+            },
+            {
+                question: "O que faz a propriedade CSS 'font-size'?",
+                options: [
+                    "Muda a família da fonte",
+                    "Define o tamanho do texto",
+                    "Deixa o texto em itálico",
+                    "Muda a cor do texto"
+                ],
+                correct: 1,
+                explanation: "font-size define o tamanho do texto. Pode usar unidades como px, em, rem, % etc."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = null;
+        let answeredQuestions = [];
+        let studentData = null;
+
+        // Elementos DOM
+        const loginContainer = document.getElementById('login-container');
+        const adminLoginContainer = document.getElementById('admin-login-container');
+        const adminContainer = document.getElementById('admin-container');
+        const quizContainer = document.getElementById('quiz-container');
+        const resultContainer = document.getElementById('result-container');
+        
+        const studentNameInput = document.getElementById('student-name');
+        const studentClassInput = document.getElementById('student-class');
+        const startBtn = document.getElementById('start-btn');
+        const adminAccessBtn = document.getElementById('admin-access-btn');
+        const adminUsernameInput = document.getElementById('admin-username');
+        const adminPasswordInput = document.getElementById('admin-password');
+        const adminLoginBtn = document.getElementById('admin-login-btn');
+        const backToLoginBtn = document.getElementById('back-to-login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        
+        const questionEl = document.getElementById('question');
+        const optionsEl = document.getElementById('options');
+        const nextBtn = document.getElementById('next-btn');
+        const questionNumber = document.getElementById('question-number');
+        const scoreEl = document.getElementById('score');
+        const progressFill = document.getElementById('progress-fill');
+        const explanationContainer = document.getElementById('explanation-container');
+        const restartBtn = document.getElementById('restart-btn');
+
+        // Event Listeners
+        startBtn.onclick = startQuiz;
+        adminAccessBtn.onclick = showAdminLogin;
+        adminLoginBtn.onclick = loginAdmin;
+        backToLoginBtn.onclick = showStudentLogin;
+        logoutBtn.onclick = showStudentLogin;
+        nextBtn.onclick = nextQuestion;
+        restartBtn.onclick = showStudentLogin;
+
+        // Função para iniciar o quiz
+        async function startQuiz() {
+            const name = studentNameInput.value.trim();
+            const studentClass = studentClassInput.value.trim();
+
+            if (!name || !studentClass) {
+                alert('Por favor, preencha seu nome e turma!');
+                return;
+            }
+
+            studentData = {
+                name: name,
+                class: studentClass,
+                timestamp: new Date().toISOString(),
+                id: Date.now().toString()
+            };
+
+            document.getElementById('current-student-name').textContent = name;
+            document.getElementById('current-student-class').textContent = studentClass;
+
+            loginContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            
+            // Reset do quiz
+            currentQuestion = 0;
+            score = 0;
+            answeredQuestions = [];
+            scoreEl.textContent = 'Pontuação: 0';
+            
+            loadQuestion();
+        }
+
+        // Função para carregar questão
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            questionEl.textContent = q.question;
+            questionNumber.textContent = `Questão ${currentQuestion + 1} de ${questions.length}`;
+            progressFill.style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+
+            optionsEl.innerHTML = '';
+            explanationContainer.innerHTML = '';
+            nextBtn.classList.add('hidden');
+            selectedAnswer = null;
+
+            q.options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.textContent = option;
+                div.onclick = () => selectAnswer(index);
+                optionsEl.appendChild(div);
+            });
+        }
+
+        // Função para selecionar resposta
+        function selectAnswer(index) {
+            if (selectedAnswer !== null) return;
+
+            selectedAnswer = index;
+            const options = document.querySelectorAll('.option');
+            const q = questions[currentQuestion];
+            const isCorrect = index === q.correct;
+
+            if (isCorrect) {
+                score++;
+                scoreEl.textContent = `Pontuação: ${score}`;
+            }
+
+            // Salvar resposta com todos os detalhes
+            answeredQuestions.push({
+                questionIndex: currentQuestion,
+                question: q.question,
+                correct: isCorrect,
+                selectedOption: q.options[index],
+                correctOption: q.options[q.correct]
+            });
+
+            options.forEach((option, i) => {
+                option.classList.add('disabled');
+                if (i === q.correct) {
+                    option.classList.add('correct');
+                } else if (i === index) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            const explanationDiv = document.createElement('div');
+            explanationDiv.className = `explanation ${isCorrect ? 'correct' : 'incorrect'}`;
+            explanationDiv.innerHTML = `
+                <div class="explanation-title">${isCorrect ? '✓ Correto!' : '✗ Incorreto!'}</div>
+                <div>${q.explanation}</div>
+            `;
+            explanationContainer.appendChild(explanationDiv);
+
+            nextBtn.classList.remove('hidden');
+        }
+
+        // Função para próxima questão
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Função para mostrar resultados e salvar dados
+        async function showResults() {
+            quizContainer.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('final-score').textContent = `${score}/${questions.length}`;
+            document.getElementById('final-percentage').textContent = `${percentage}% de acertos`;
+
+            let message = '';
+            if (percentage === 100) message = '🏆 Perfeito! Você domina HTML e CSS!';
+            else if (percentage >= 80) message = '🎉 Excelente! Muito bom conhecimento!';
+            else if (percentage >= 60) message = '👍 Bom trabalho! Continue praticando!';
+            else if (percentage >= 40) message = '📚 Precisa estudar mais um pouco!';
+            else message = '💪 Continue estudando, você consegue!';
+
+            document.getElementById('result-message').textContent = message;
+
+            const resultList = document.getElementById('result-list');
+            resultList.innerHTML = '';
+            answeredQuestions.forEach((answer, idx) => {
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                div.innerHTML = `
+                    <span>Questão ${idx + 1}</span>
+                    <span class="${answer.correct ? 'icon-check' : 'icon-x'}">${answer.correct ? '✓' : '✗'}</span>
+                `;
+                resultList.appendChild(div);
+            });
+
+            // Salvar resultado no storage
+            await saveStudentResult();
+        }
+
+        // Salvar resultado do aluno
+        async function saveStudentResult() {
+            try {
+                // Filtrar apenas os erros
+                const errors = answeredQuestions.filter(q => !q.correct);
+                
+                const resultData = {
+                    ...studentData,
+                    score: score,
+                    total: questions.length,
+                    percentage: Math.round((score / questions.length) * 100),
+                    errors: errors, // Array com todas as questões erradas
+                    totalErrors: errors.length,
+                    completedAt: new Date().toISOString()
+                };
+
+                const key = `student:${studentData.id}`;
+                const saved = await window.storage.set(key, JSON.stringify(resultData), true);
+                
+                if (saved) {
+                    console.log('Resultado salvo com sucesso!');
+                    console.log('Total de erros salvos:', errors.length);
+                } else {
+                    console.error('Falha ao salvar resultado');
+                }
+            } catch (error) {
+                console.error('Erro ao salvar resultado:', error);
+                alert('Erro ao salvar resultado. Por favor, tente novamente.');
+            }
+        }
+
+        // Mostrar tela de login do aluno
+        function showStudentLogin() {
+            loginContainer.classList.remove('hidden');
+            adminLoginContainer.classList.add('hidden');
+            adminContainer.classList.add('hidden');
+            quizContainer.classList.add('hidden');
+            resultContainer.classList.add('hidden');
+            
+            // Reset quiz
+            currentQuestion = 0;
+            score = 0;
+            selectedAnswer = null;
+            answeredQuestions = [];
+            studentData = null;
+            scoreEl.textContent = 'Pontuação: 0';
+            studentNameInput.value = '';
+            studentClassInput.value = '';
+        }
+
+        // Mostrar tela de login admin
+        function showAdminLogin() {
+            loginContainer.classList.add('hidden');
+            adminLoginContainer.classList.remove('hidden');
+            adminUsernameInput.value = '';
+            adminPasswordInput.value = '';
+        }
+
+        // Login admin
+        async function loginAdmin() {
+            const username = adminUsernameInput.value.trim();
+            const password = adminPasswordInput.value;
+            
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                adminLoginContainer.classList.add('hidden');
+                adminContainer.classList.remove('hidden');
+                await loadAdminPanel();
+            } else {
+                alert('Usuário ou senha incorretos!');
+                adminUsernameInput.value = '';
+                adminPasswordInput.value = '';
+                adminUsernameInput.focus();
+            }
+        }
+
+        // Carregar painel administrativo
+        async function loadAdminPanel() {
+            const studentsList = document.getElementById('students-list');
+            studentsList.innerHTML = '<div class="loading">Carregando dados...</div>';
+
+            try {
+                // Listar todas as chaves de alunos
+                const result = await window.storage.list('student:', true);
+                
+                if (!result || !result.keys || result.keys.length === 0) {
+                    studentsList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Nenhum aluno realizou o quiz ainda.</p>';
+                    document.getElementById('total-students').textContent = '0';
+                    document.getElementById('average-score').textContent = '0%';
+                    document.getElementById('average-correct').textContent = '0';
+                    document.getElementById('average-errors').textContent = '0';
+                    return;
+                }
+
+                // Buscar dados de cada aluno
+                const studentsData = [];
+                for (const key of result.keys) {
+                    try {
+                        const data = await window.storage.get(key, true);
+                        if (data && data.value) {
+                            const studentData = JSON.parse(data.value);
+                            studentsData.push(studentData);
+                        }
+                    } catch (error) {
+                        console.error(`Erro ao carregar ${key}:`, error);
+                    }
+                }
+
+                // Ordenar por data (mais recente primeiro)
+                studentsData.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+
+                // Calcular estatísticas
+                const totalStudents = studentsData.length;
+                const averageScore = totalStudents > 0 
+                    ? Math.round(studentsData.reduce((sum, s) => sum + s.percentage, 0) / totalStudents)
+                    : 0;
+                
+                const averageCorrect = totalStudents > 0
+                    ? Math.round(studentsData.reduce((sum, s) => sum + s.score, 0) / totalStudents)
+                    : 0;
+                
+                const averageErrors = totalStudents > 0
+                    ? Math.round(studentsData.reduce((sum, s) => sum + (s.total - s.score), 0) / totalStudents)
+                    : 0;
+
+                document.getElementById('total-students').textContent = totalStudents;
+                document.getElementById('average-score').textContent = averageScore + '%';
+                document.getElementById('average-correct').textContent = averageCorrect;
+                document.getElementById('average-errors').textContent = averageErrors;
+
+                // Renderizar lista de alunos
+                studentsList.innerHTML = '';
+                studentsData.forEach(student => {
+                    const card = createStudentCard(student);
+                    studentsList.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error('Erro ao carregar painel:', error);
+                studentsList.innerHTML = '<p style="text-align: center; color: #ef4444; padding: 20px;">Erro ao carregar dados. Tente novamente.</p>';
+            }
+        }
+
+        // Criar card de aluno
+        function createStudentCard(student) {
+            const card = document.createElement('div');
+            card.className = 'student-card';
+
+            const date = new Date(student.completedAt);
+            const formattedDate = date.toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            const errorsCount = student.errors ? student.errors.length : 0;
+            const correctCount = student.score || 0;
+
+            let errorsHTML = '';
+            if (student.errors && student.errors.length > 0) {
+                errorsHTML = `
+                    <div style="margin-top: 15px;">
+                        <strong style="color: #ef4444; font-size: 1.1em;">❌ Questões erradas (${student.errors.length}):</strong>
+                        <div class="errors-container">
+                            ${student.errors.map((error) => `
+                                <div class="error-item">
+                                    <strong>Questão ${error.questionIndex + 1}:</strong> ${error.question}<br>
+                                    <span style="color: #666;">
+                                        <strong>Resposta do aluno:</strong> ${error.selectedOption}
+                                    </span><br>
+                                    <span style="color: #10b981;">
+                                        <strong>✓ Resposta correta:</strong> ${error.correctOption}
+                                    </span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                errorsHTML = '<p style="color: #10b981; font-weight: 600; margin-top: 10px; font-size: 1.1em;">✅ Gabaritou todas as questões!</p>';
+            }
+
+            card.innerHTML = `
+                <div class="student-header">
+                    <div>
+                        <div class="student-name">${student.name}</div>
+                        <div class="student-info">Turma: ${student.class}</div>
+                    </div>
+                    <div class="student-score">${student.score}/${student.total}</div>
+                </div>
+                <div class="student-info">
+                    <strong>Porcentagem:</strong> ${student.percentage}%
+                </div>
+                <div class="student-info">
+                    <strong>Acertos:</strong> <span style="color: #10b981; font-weight: 600;">${correctCount}</span> | 
+                    <strong>Erros:</strong> <span style="color: #ef4444; font-weight: 600;">${errorsCount}</span>
+                </div>
+                <div class="student-info">
+                    <strong>Data:</strong> ${formattedDate}
+                </div>
+                ${errorsHTML}
+                <div class="student-actions">
+                    <button class="btn-delete" onclick="deleteStudent('${student.id}')">🗑️ Apagar Registro</button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Função para apagar registro de aluno
+        async function deleteStudent(studentId) {
+            if (!confirm('Tem certeza que deseja apagar este registro? Esta ação não pode ser desfeita.')) {
+                return;
+            }
+
+            try {
+                const key = `student:${studentId}`;
+                await window.storage.delete(key, true);
+                alert('Registro apagado com sucesso!');
+                await loadAdminPanel(); // Recarregar painel
+            } catch (error) {
+                console.error('Erro ao apagar registro:', error);
+                alert('Erro ao apagar registro. Tente novamente.');
+            }
+        }
+
+        // Inicialização
+        console.log('Quiz inicializado!');
+    </script>
+</body>
+
+</html>
